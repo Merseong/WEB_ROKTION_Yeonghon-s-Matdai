@@ -257,8 +257,10 @@ class App extends Component {
     
         window.socket.on('startPageEditing', (editing) => {
             const nextDocs = this.state.documents;
-            nextDocs.find(doc => doc.dbId === editing.docId)
-            .documentContent[editing.editingPage]?.isEditing = true;
+            const idx = nextDocs.findIndex(doc => doc.dbId === editing.docId)
+            if (idx >= 0 && nextDocs[idx].documentContent[editing.editingPage] !== undefined) {
+                nextDocs[idx].documentContent[editing.editingPage].isEditing = true;
+            }
 
             this.setState({
                 documents: nextDocs,
@@ -267,8 +269,11 @@ class App extends Component {
 
         window.socket.on('endPageEditing', (edited) => {
             const nextDocs = this.state.documents;
-            nextDocs.find(doc => doc.dbId === edited.docId)
-            .documentContent[edited.editedPage]?.isEditing = false;
+            const idx = nextDocs.findIndex(doc => doc.dbId === edited.docId)
+            if (idx >= 0 && nextDocs[idx].documentContent[edited.editingPage] !== undefined) {
+                nextDocs[idx].documentContent[edited.editingPage].isEditing = false;
+            }
+
 
             this.setState({
                 documents: nextDocs,
